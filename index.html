@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>STAR RUST — 3X PvP Rust Сервер</title>
+    <!-- Подключаем шрифт для современного стиля (Inter + заголовочный) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <!-- Font awesome 6 (бесплатные иконки) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #0a0f1f, #03060c);
+            font-family: 'Inter', sans-serif;
+            color: #eef2ff;
+            line-height: 1.5;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(ellipse at 30% 40%, rgba(255, 100, 0, 0.08), transparent 70%);
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                              radial-gradient(1px 1px at 70px 120px, #ffb347, rgba(0,0,0,0));
+            background-size: 200px 200px, 300px 300px;
+            background-repeat: repeat;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0 1rem;
+            border-bottom: 1px solid rgba(255, 140, 0, 0.3);
+            position: relative;
+        }
+
+        .server-badge {
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 100, 0, 0.6);
+            color: #ffb347;
+            margin-bottom: 1.5rem;
+            font-family: 'Orbitron', monospace;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFA500, #FF4D00, #FFB347);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 90, 0, 0.3);
+            letter-spacing: 3px;
+            margin-bottom: 0.75rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #cbd5e6;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: rgba(12, 18, 28, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            flex: 1 1 280px;
+            border: 1px solid rgba(255, 100, 0, 0.2);
+            transition: all 0.25s ease-in-out;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+        }
+
+        .card:hover {
+            border-color: #ff8c42;
+            transform: translateY(-5px);
+            background: rgba(15, 22, 34, 0.85);
+            box-shadow: 0 25px 40px -14px rgba(255, 100, 0, 0.2);
+        }
+
+        .card-icon {
+            font-size: 2.4rem;
+            color: #ff8c42;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: -0.5px;
+        }
+
+        .ip-address {
+            background: #00000055;
+            padding: 0.6rem 1rem;
+            border-radius: 1.2rem;
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            display: inline-block;
+            border: 1px dashed #ff8c42;
+            margin: 0.5rem 0;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid #ff8c42;
+            color: #ffb347;
+            margin-left: 0.8rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #ff8c42;
+            color: #0a0f1f;
+        }
+
+        .ingame-name {
+            background: #2a1e0f60;
+            padding: 0.7rem 1rem;
+            border-radius: 1rem;
+            border-left: 4px solid #ff9800;
+            font-family: monospace;
+            word-break: break-word;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2.5rem 0;
+        }
+
+        .feature-pill {
+            background: #0f1422e0;
+            backdrop-filter: blur(2px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 1px solid #ff8c4255;
+            color: #ffe1b3;
+        }
+
+        .feature-pill i {
+            margin-right: 0.4rem;
+            color: #ff8c42;
+        }
+
+        .btn-tg {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(95deg, #1e2a3a, #0f172a);
+            border: 1px solid #ff9800;
+            padding: 0.7rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            text-decoration: none;
+            transition: 0.2s;
+            box-shadow: 0 8px 14px rgba(0,0,0,0.3);
+            margin-top: 0.8rem;
+        }
+
+        .btn-tg i {
+            font-size: 1.3rem;
+            color: #2aabee;
+        }
+
+        .btn-tg:hover {
+            background: linear-gradient(95deg, #ff8c42, #d9641a);
+            border-color: #fff3b0;
+            transform: scale(1.02);
+            box-shadow: 0 12px 22px rgba(255, 100, 0, 0.3);
+        }
+
+        .donate-card {
+            background: linear-gradient(135deg, rgba(30, 20, 35, 0.85), rgba(10, 8, 20, 0.9));
+            border: 1px solid rgba(255, 180, 70, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0 1rem;
+            transition: 0.2s;
+        }
+
+        .donate-card:hover {
+            border-color: #ffaa55;
+            box-shadow: 0 0 25px rgba(255, 140, 0, 0.25);
+        }
+
+        .donate-icon {
+            font-size: 3rem;
+            color: #ffb347;
+            margin-bottom: 0.5rem;
+        }
+
+        .donate-card h3 {
+            font-size: 1.8rem;
+            font-family: 'Orbitron', monospace;
+            margin-bottom: 1rem;
+        }
+
+        .donate-note {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+            color: #ffcc88;
+        }
+
+        .donate-note i {
+            margin-right: 0.4rem;
+        }
+
+        .btn-donate {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(95deg, #6b2e5f, #8b3c6b);
+            border: 1px solid #ffb347;
+            padding: 0.9rem 2.2rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            text-decoration: none;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn-donate i {
+            font-size: 1.4rem;
+            color: #ffdd99;
+        }
+
+        .btn-donate:hover {
+            background: linear-gradient(95deg, #ff8c42, #c95a1a);
+            transform: scale(1.02);
+            border-color: #fff0b5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,140,0,0.2);
+            font-size: 0.8rem;
+            color: #8e9aaf;
+        }
+
+        .connect-panel {
+            background: rgba(0,0,0,0.45);
+            border-radius: 2rem;
+            padding: 1.2rem 2rem;
+            margin: 2rem 0 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.2rem;
+        }
+
+        .connect-text {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .copy-large {
+            background: #ff8c4222;
+            padding: 0.5rem 1.3rem;
+            border-radius: 2rem;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 720px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .container {
+                padding: 1rem 1rem 3rem;
+            }
+            .card {
+                padding: 1.5rem;
+            }
+            .connect-panel {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .donate-card h3 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="stars"></div>
+
+<div class="container">
+    <div class="hero">
+        <div class="server-badge">
+            <i class="fas fa-fire"></i> RUST PVP 3X • MAX GROUPS • КИТЫ
+        </div>
+        <h1>STAR RUST</h1>
+        <div class="tagline">
+            <i class="fas fa-star-of-life" style="color:#ff8c42;"></i>  Агрессивный вайп • Лута как метеоритный дождь  <i class="fas fa-star-of-life" style="color:#ff8c42;"></i>
+        </div>
+    </div>
+
+    <!-- Карточки основной информации (Telegram на месте) -->
+    <div class="card-grid">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+            <h3>IP сервера</h3>
+            <div class="ip-address" id="serverIp">89.248.236.141:27777</div>
+            <button class="copy-btn" id="copyIpBtn"><i class="far fa-copy"></i> Копировать IP</button>
+            <div style="margin-top: 1rem; font-size: 0.85rem;">Подключение напрямую: <strong>client.connect 89.248.236.141:27777</strong></div>
+        </div>
+
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+            <h3>В списке серверов</h3>
+            <div class="ingame-name">
+                ✦ STAR RUST - 3X [MAX3 | KIT | TP ] ✦
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.9rem;">
+                <i class="fas fa-check-circle" style="color:#5fcb5f;"></i>  Режим: 3X gather /  <i class="fas fa-people-arrows"></i> MAX 3 в клане
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-icon"><i class="fab fa-telegram"></i></div>
+            <h3>Telegram канал</h3>
+            <p style="margin: 0.5rem 0;">Новости, ивенты, вайпы, розыгрыши скинов</p>
+            <a href="https://t.me/ServerStarRust" target="_blank" class="btn-tg">
+                <i class="fab fa-telegram"></i>  Присоединиться
+            </a>
+        </div>
+    </div>
+
+    <!-- Доп панель удобного копирования + фичи -->
+    <div class="connect-panel">
+        <div class="connect-text">
+            <i class="fas fa-plug" style="font-size: 1.8rem; color:#ffaa55;"></i>
+            <span>Быстрое подключение:</span>
+            <div class="copy-large" id="quickConnectCmd">client.connect 89.248.236.141:27777</div>
+            <button class="copy-btn" id="copyQuickCmd" style="background:#111a28;">Копировать команду</button>
+        </div>
+        <div>
+            <span class="feature-pill"><i class="fas fa-cubes"></i> 3X ресурсы</span>
+            <span class="feature-pill"><i class="fas fa-gift"></i> KIT / Стартовый набор</span>
+            <span class="feature-pill"><i class="fas fa-map-marker-alt"></i> Teleport (/tpr)</span>
+        </div>
+    </div>
+
+    <!-- Геймплейные преимущества / описание -->
+    <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: space-between; background: rgba(0,0,0,0.3); border-radius: 2rem; padding: 2rem; margin: 2rem 0;">
+        <div style="flex: 1; min-width: 200px;">
+            <i class="fas fa-skull" style="font-size: 2rem; color:#ff784b;"></i>
+            <h3 style="margin: 0.8rem 0 0.5rem;">Активный PvP</h3>
+            <p style="color:#b9c3db;">Каждую неделю чистка карты, события на аирдропах, рейды без ограничений, настоящий Rust экшен.</p>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <i class="fas fa-chart-line" style="font-size: 2rem; color:#ff784b;"></i>
+            <h3 style="margin: 0.8rem 0 0.5rem;">Экономика и лута</h3>
+            <p style="color:#b9c3db;">Увеличенный лут с ящиков, вертолётов, танков. Система китов и приватов для комфортной игры.</p>
+        </div>
+        <div style="flex: 1; min-width: 200px;">
+            <i class="fas fa-shield-alt" style="font-size: 2rem; color:#ff784b;"></i>
+            <h3 style="margin: 0.8rem 0 0.5rem;">Античит и Админы</h3>
+            <p style="color:#b9c3db;">Активная администрация, модерация 24/7, защита от читеров и гриферов.</p>
+        </div>
+    </div>
+
+    <!-- Секция с подробными тегами -->
+    <div class="features">
+        <span class="feature-pill"><i class="fas fa-tachometer-alt"></i> MAX GROUPS 3</span>
+        <span class="feature-pill"><i class="fas fa-arrow-up"></i> 3X Gather rate</span>
+        <span class="feature-pill"><i class="fas fa-tools"></i> Starter Kit /kit</span>
+        <span class="feature-pill"><i class="fas fa-sync-alt"></i> Карта каждые 2 недели</span>
+        <span class="feature-pill"><i class="fas fa-robot"></i> Авто-события (Heli, Bradley)</span>
+        <span class="feature-pill"><i class="fas fa-door-open"></i> Домашний телепорт</span>
+    </div>
+
+    <!-- ДОНАТ В САМОМ НИЗУ (перед футером) -->
+    <div class="donate-card">
+        <div class="donate-icon">
+            <i class="fas fa-hand-holding-heart"></i>
+        </div>
+        <h3>❤️ Поддержать сервер</h3>
+        <div class="donate-note">
+            <i class="fas fa-info-circle"></i> Донат чисто добровольный — никаких игровых преимуществ
+        </div>
+        <p style="margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Нравится играть на STAR RUST? Твоя помощь идёт на оплату хостинга и развитие проекта. 
+            Спасибо, что остаёшься с нами ❤️
+        </p>
+        <a href="https://www.donationalerts.com/r/star_rust" target="_blank" class="btn-donate">
+            <i class="fab fa-patreon"></i>  Поддержать через DonationAlerts
+        </a>
+        <div style="margin-top: 1.2rem; font-size: 0.8rem; opacity: 0.7;">
+            <i class="fas fa-shield-alt"></i> Без донат-привилегий, только для развития
+        </div>
+    </div>
+
+    <div class="footer">
+        <i class="fas fa-dragon"></i> STAR RUST — сервер с душой пост-апокалипсиса. Железные нервы и удачи на руинах! <i class="fas fa-radiation"></i><br>
+        © 2025 STAR RUST COMMUNITY | Rust: Facepunch Studios.
+    </div>
+</div>
+
+<script>
+    const copyIpBtn = document.getElementById('copyIpBtn');
+    const quickCmdSpan = document.getElementById('quickConnectCmd');
+    const copyQuickCmdBtn = document.getElementById('copyQuickCmd');
+
+    function copyToClipboard(text, btnElement, successMsg = "Скопировано!") {
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = `<i class="fas fa-check"></i> ${successMsg}`;
+            setTimeout(() => {
+                btnElement.innerHTML = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.warn('Ошибка копирования: ', err);
+            alert('Не удалось скопировать, выделите вручную');
+        });
+    }
+
+    if (copyIpBtn) {
+        copyIpBtn.addEventListener('click', () => {
+            copyToClipboard("89.248.236.141:27777", copyIpBtn, "IP скопирован");
+        });
+    }
+
+    if (copyQuickCmdBtn && quickCmdSpan) {
+        copyQuickCmdBtn.addEventListener('click', () => {
+            copyToClipboard(quickCmdSpan.innerText.trim(), copyQuickCmdBtn, "Команда готова");
+        });
+    }
+
+    if (quickCmdSpan) {
+        quickCmdSpan.style.cursor = "pointer";
+        quickCmdSpan.addEventListener('click', () => {
+            copyToClipboard(quickCmdSpan.innerText.trim(), copyQuickCmdBtn, "Команда скопирована");
+        });
+    }
+
+    const ipDiv = document.querySelector('.ip-address');
+    if (ipDiv) {
+        ipDiv.style.cursor = "pointer";
+        ipDiv.addEventListener('click', () => {
+            copyToClipboard("89.248.236.141:27777", copyIpBtn, "IP скопирован");
+        });
+    }
+
+    console.log("STAR RUST | Telegram на месте в карточках, донат внизу страницы!");
+</script>
+</body>
+</html>
