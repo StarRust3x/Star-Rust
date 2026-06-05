@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>STAR RUST — 3X PvP Rust Сервер</title>
+    <title>STAR RUST — 3X / 2X Rust Сервера</title>
     <!-- Подключаем шрифт для современного стиля (Inter + заголовочный) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Orbitron:wght@400;600;800;900&display=swap" rel="stylesheet">
     <!-- Font awesome 6 (бесплатные иконки) -->
@@ -103,6 +103,38 @@
             margin: 0 auto;
         }
 
+        /* переключатель серверов */
+        .server-switch {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .server-tab {
+            background: rgba(12, 18, 28, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 1px solid rgba(255, 100, 0, 0.3);
+            font-weight: 600;
+        }
+
+        .server-tab.active {
+            background: linear-gradient(95deg, #ff8c42, #d9641a);
+            border-color: #fff3b0;
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .server-tab:hover:not(.active) {
+            border-color: #ff8c42;
+            background: rgba(255, 140, 0, 0.2);
+        }
+
+        /* карточки */
         .card-grid {
             display: flex;
             flex-wrap: wrap;
@@ -149,7 +181,7 @@
             border-radius: 1.2rem;
             font-family: 'Fira Code', monospace;
             font-weight: 600;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             letter-spacing: 1px;
             display: inline-block;
             border: 1px dashed #ff8c42;
@@ -182,7 +214,7 @@
             font-family: monospace;
             word-break: break-word;
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin-top: 1rem;
         }
 
@@ -342,7 +374,16 @@
             border-radius: 2rem;
             font-family: monospace;
             font-weight: bold;
-            font-size: 1.1rem;
+            font-size: 1rem;
+        }
+
+        .server-badge-mini {
+            font-size: 0.7rem;
+            background: #ff8c4233;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            margin-left: 0.5rem;
         }
 
         @media (max-width: 720px) {
@@ -362,6 +403,10 @@
             .donate-card h3 {
                 font-size: 1.4rem;
             }
+            .server-tab {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -371,90 +416,166 @@
 <div class="container">
     <div class="hero">
         <div class="server-badge">
-            <i class="fas fa-fire"></i> RUST PVP 3X • MAX GROUPS • КИТЫ
+            <i class="fas fa-fire"></i> RUST PVP • 2 СЕРВЕРА • MAX3 / VANILLA
         </div>
         <h1>STAR RUST</h1>
         <div class="tagline">
-            <i class="fas fa-star-of-life" style="color:#ff8c42;"></i>  Агрессивный вайп • Лута как метеоритный дождь  <i class="fas fa-star-of-life" style="color:#ff8c42;"></i>
+            <i class="fas fa-star-of-life" style="color:#ff8c42;"></i>  Выбери свой стиль игры  <i class="fas fa-star-of-life" style="color:#ff8c42;"></i>
         </div>
     </div>
 
-    <!-- Карточки основной информации (Telegram на месте) -->
-    <div class="card-grid">
-        <div class="card">
-            <div class="card-icon"><i class="fas fa-network-wired"></i></div>
-            <h3>IP сервера</h3>
-            <div class="ip-address" id="serverIp">89.248.236.141:27777</div>
-            <button class="copy-btn" id="copyIpBtn"><i class="far fa-copy"></i> Копировать IP</button>
-            <div style="margin-top: 1rem; font-size: 0.85rem;">Подключение напрямую: <strong>client.connect 89.248.236.141:27777</strong></div>
-        </div>
+    <!-- Переключатель серверов -->
+    <div class="server-switch">
+        <div class="server-tab active" data-server="server1">⭐ STAR RUST #1 — 3X</div>
+        <div class="server-tab" data-server="server2">⚡ STAR RUST #2 — 2X VANILLA</div>
+    </div>
 
-        <div class="card">
-            <div class="card-icon"><i class="fas fa-gamepad"></i></div>
-            <h3>В списке серверов</h3>
-            <div class="ingame-name">
-                ✦ STAR RUST - 3X [MAX3 | KIT | TP ] ✦
+    <!-- Контент для первого сервера (3X) -->
+    <div id="server1-content" class="server-content">
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                <h3>IP сервера #1</h3>
+                <div class="ip-address" id="server1Ip">89.248.236.141:27777</div>
+                <button class="copy-btn copy-ip-btn" data-ip="89.248.236.141:27777"><i class="far fa-copy"></i> Копировать IP</button>
+                <div style="margin-top: 1rem; font-size: 0.85rem;">Подключение напрямую: <strong>client.connect 89.248.236.141:27777</strong></div>
             </div>
-            <div style="margin-top: 1rem; font-size: 0.9rem;">
-                <i class="fas fa-check-circle" style="color:#5fcb5f;"></i>  Режим: 3X gather /  <i class="fas fa-people-arrows"></i> MAX 3 в клане
+
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                <h3>В списке серверов</h3>
+                <div class="ingame-name">
+                    ✦ STAR RUST - 3X [MAX3 | KIT | TP ] ✦
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-check-circle" style="color:#5fcb5f;"></i>  Режим: 3X gather /  <i class="fas fa-people-arrows"></i> MAX 3 в клане
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fab fa-telegram"></i></div>
+                <h3>Telegram канал</h3>
+                <p style="margin: 0.5rem 0;">Новости, ивенты, вайпы, розыгрыши скинов</p>
+                <a href="https://t.me/ServerStarRust" target="_blank" class="btn-tg">
+                    <i class="fab fa-telegram"></i>  Присоединиться
+                </a>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-icon"><i class="fab fa-telegram"></i></div>
-            <h3>Telegram канал</h3>
-            <p style="margin: 0.5rem 0;">Новости, ивенты, вайпы, розыгрыши скинов</p>
-            <a href="https://t.me/ServerStarRust" target="_blank" class="btn-tg">
-                <i class="fab fa-telegram"></i>  Присоединиться
-            </a>
+        <div class="connect-panel">
+            <div class="connect-text">
+                <i class="fas fa-plug" style="font-size: 1.8rem; color:#ffaa55;"></i>
+                <span>Быстрое подключение (#1):</span>
+                <div class="copy-large quick-cmd" data-cmd="client.connect 89.248.236.141:27777">client.connect 89.248.236.141:27777</div>
+                <button class="copy-btn copy-cmd-btn" data-cmd="client.connect 89.248.236.141:27777" style="background:#111a28;">Копировать команду</button>
+            </div>
+            <div>
+                <span class="feature-pill"><i class="fas fa-cubes"></i> 3X ресурсы</span>
+                <span class="feature-pill"><i class="fas fa-gift"></i> KIT / Стартовый набор</span>
+                <span class="feature-pill"><i class="fas fa-map-marker-alt"></i> Teleport (/tpr)</span>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: space-between; background: rgba(0,0,0,0.3); border-radius: 2rem; padding: 2rem; margin: 2rem 0;">
+            <div style="flex: 1; min-width: 200px;">
+                <i class="fas fa-skull" style="font-size: 2rem; color:#ff784b;"></i>
+                <h3 style="margin: 0.8rem 0 0.5rem;">Активный PvP</h3>
+                <p style="color:#b9c3db;">Каждую неделю чистка карты, события на аирдропах, рейды без ограничений.</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <i class="fas fa-chart-line" style="font-size: 2rem; color:#ff784b;"></i>
+                <h3 style="margin: 0.8rem 0 0.5rem;">Экономика и лута</h3>
+                <p style="color:#b9c3db;">Увеличенный лут с ящиков, вертолётов, танков. Система китов и приватов.</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color:#ff784b;"></i>
+                <h3 style="margin: 0.8rem 0 0.5rem;">Античит и Админы</h3>
+                <p style="color:#b9c3db;">Активная администрация, модерация 24/7, защита от читеров и гриферов.</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <span class="feature-pill"><i class="fas fa-tachometer-alt"></i> MAX GROUPS 3</span>
+            <span class="feature-pill"><i class="fas fa-arrow-up"></i> 3X Gather rate</span>
+            <span class="feature-pill"><i class="fas fa-tools"></i> Starter Kit /kit</span>
+            <span class="feature-pill"><i class="fas fa-sync-alt"></i> Карта каждые 2 недели</span>
+            <span class="feature-pill"><i class="fas fa-robot"></i> Авто-события (Heli, Bradley)</span>
+            <span class="feature-pill"><i class="fas fa-door-open"></i> Домашний телепорт</span>
         </div>
     </div>
 
-    <!-- Доп панель удобного копирования + фичи -->
-    <div class="connect-panel">
-        <div class="connect-text">
-            <i class="fas fa-plug" style="font-size: 1.8rem; color:#ffaa55;"></i>
-            <span>Быстрое подключение:</span>
-            <div class="copy-large" id="quickConnectCmd">client.connect 89.248.236.141:27777</div>
-            <button class="copy-btn" id="copyQuickCmd" style="background:#111a28;">Копировать команду</button>
+    <!-- Контент для второго сервера (2X Vanilla) - БЕЗ ТЕЛЕПОРТА -->
+    <div id="server2-content" class="server-content" style="display: none;">
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                <h3>IP сервера #2</h3>
+                <div class="ip-address" id="server2Ip">89.248.236.141:27217</div>
+                <button class="copy-btn copy-ip-btn" data-ip="89.248.236.141:27217"><i class="far fa-copy"></i> Копировать IP</button>
+                <div style="margin-top: 1rem; font-size: 0.85rem;">Подключение напрямую: <strong>client.connect 89.248.236.141:27217</strong></div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                <h3>В списке серверов</h3>
+                <div class="ingame-name">
+                    ✦ STAR RUST #2 - 2X VANILLA ✦
+                </div>
+                <div style="margin-top: 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-check-circle" style="color:#5fcb5f;"></i>  Режим: 2X gather /  <i class="fas fa-leaf"></i> Ванильный геймплей
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fab fa-telegram"></i></div>
+                <h3>Telegram канал</h3>
+                <p style="margin: 0.5rem 0;">Новости, ивенты, вайпы, розыгрыши скинов</p>
+                <a href="https://t.me/ServerStarRust" target="_blank" class="btn-tg">
+                    <i class="fab fa-telegram"></i>  Присоединиться
+                </a>
+            </div>
         </div>
-        <div>
-            <span class="feature-pill"><i class="fas fa-cubes"></i> 3X ресурсы</span>
-            <span class="feature-pill"><i class="fas fa-gift"></i> KIT / Стартовый набор</span>
-            <span class="feature-pill"><i class="fas fa-map-marker-alt"></i> Teleport (/tpr)</span>
+
+        <div class="connect-panel">
+            <div class="connect-text">
+                <i class="fas fa-plug" style="font-size: 1.8rem; color:#ffaa55;"></i>
+                <span>Быстрое подключение (#2):</span>
+                <div class="copy-large quick-cmd" data-cmd="client.connect 89.248.236.141:27217">client.connect 89.248.236.141:27217</div>
+                <button class="copy-btn copy-cmd-btn" data-cmd="client.connect 89.248.236.141:27217" style="background:#111a28;">Копировать команду</button>
+            </div>
+            <div>
+                <span class="feature-pill"><i class="fas fa-cubes"></i> 2X ресурсы</span>
+                <span class="feature-pill"><i class="fas fa-balance-scale"></i> Vanilla+ опыт</span>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: space-between; background: rgba(0,0,0,0.3); border-radius: 2rem; padding: 2rem; margin: 2rem 0;">
+            <div style="flex: 1; min-width: 200px;">
+                <i class="fas fa-skull" style="font-size: 2rem; color:#ff784b;"></i>
+                <h3 style="margin: 0.8rem 0 0.5rem;">Честный PvP</h3>
+                <p style="color:#b9c3db;">Близкий к ванильному геймплей, но с небольшим бустом 2X для комфорта.</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <i class="fas fa-chart-line" style="font-size: 2rem; color:#ff784b;"></i>
+                <h3 style="margin: 0.8rem 0 0.5rem;">Умеренный фарм</h3>
+                <p style="color:#b9c3db;">2X ресурсы — не слишком быстро, но и не нудно. Идеальный баланс.</p>
+            </div>
+            <div style="flex: 1; min-width: 200px;">
+                <i class="fas fa-shield-alt" style="font-size: 2rem; color:#ff784b;"></i>
+                <h3 style="margin: 0.8rem 0 0.5rem;">Античит</h3>
+                <p style="color:#b9c3db;">Полная защита от читеров, активные администраторы.</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <span class="feature-pill"><i class="fas fa-tachometer-alt"></i> НЕТ лимита групп</span>
+            <span class="feature-pill"><i class="fas fa-arrow-up"></i> 2X Gather rate</span>
+            <span class="feature-pill"><i class="fas fa-sync-alt"></i> Еженедельный вайп</span>
+            <span class="feature-pill"><i class="fas fa-robot"></i> События (Heli, Bradley)</span>
         </div>
     </div>
 
-    <!-- Геймплейные преимущества / описание -->
-    <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: space-between; background: rgba(0,0,0,0.3); border-radius: 2rem; padding: 2rem; margin: 2rem 0;">
-        <div style="flex: 1; min-width: 200px;">
-            <i class="fas fa-skull" style="font-size: 2rem; color:#ff784b;"></i>
-            <h3 style="margin: 0.8rem 0 0.5rem;">Активный PvP</h3>
-            <p style="color:#b9c3db;">Каждую неделю чистка карты, события на аирдропах, рейды без ограничений, настоящий Rust экшен.</p>
-        </div>
-        <div style="flex: 1; min-width: 200px;">
-            <i class="fas fa-chart-line" style="font-size: 2rem; color:#ff784b;"></i>
-            <h3 style="margin: 0.8rem 0 0.5rem;">Экономика и лута</h3>
-            <p style="color:#b9c3db;">Увеличенный лут с ящиков, вертолётов, танков. Система китов и приватов для комфортной игры.</p>
-        </div>
-        <div style="flex: 1; min-width: 200px;">
-            <i class="fas fa-shield-alt" style="font-size: 2rem; color:#ff784b;"></i>
-            <h3 style="margin: 0.8rem 0 0.5rem;">Античит и Админы</h3>
-            <p style="color:#b9c3db;">Активная администрация, модерация 24/7, защита от читеров и гриферов.</p>
-        </div>
-    </div>
-
-    <!-- Секция с подробными тегами -->
-    <div class="features">
-        <span class="feature-pill"><i class="fas fa-tachometer-alt"></i> MAX GROUPS 3</span>
-        <span class="feature-pill"><i class="fas fa-arrow-up"></i> 3X Gather rate</span>
-        <span class="feature-pill"><i class="fas fa-tools"></i> Starter Kit /kit</span>
-        <span class="feature-pill"><i class="fas fa-sync-alt"></i> Карта каждые 2 недели</span>
-        <span class="feature-pill"><i class="fas fa-robot"></i> Авто-события (Heli, Bradley)</span>
-        <span class="feature-pill"><i class="fas fa-door-open"></i> Домашний телепорт</span>
-    </div>
-
-    <!-- ДОНАТ В САМОМ НИЗУ (перед футером) -->
+    <!-- ДОНАТ В САМОМ НИЗУ -->
     <div class="donate-card">
         <div class="donate-icon">
             <i class="fas fa-hand-holding-heart"></i>
@@ -476,16 +597,35 @@
     </div>
 
     <div class="footer">
-        <i class="fas fa-dragon"></i> STAR RUST — сервер с душой пост-апокалипсиса. Железные нервы и удачи на руинах! <i class="fas fa-radiation"></i><br>
+        <i class="fas fa-dragon"></i> STAR RUST — два сервера на любой вкус! Железные нервы и удачи на руинах! <i class="fas fa-radiation"></i><br>
         © 2025 STAR RUST COMMUNITY | Rust: Facepunch Studios.
     </div>
 </div>
 
 <script>
-    const copyIpBtn = document.getElementById('copyIpBtn');
-    const quickCmdSpan = document.getElementById('quickConnectCmd');
-    const copyQuickCmdBtn = document.getElementById('copyQuickCmd');
+    // Переключение между серверами
+    const tabs = document.querySelectorAll('.server-tab');
+    const contents = {
+        server1: document.getElementById('server1-content'),
+        server2: document.getElementById('server2-content')
+    };
 
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const server = tab.dataset.server;
+            
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            Object.values(contents).forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            contents[server].style.display = 'block';
+        });
+    });
+
+    // Функция копирования
     function copyToClipboard(text, btnElement, successMsg = "Скопировано!") {
         navigator.clipboard.writeText(text).then(() => {
             const originalText = btnElement.innerHTML;
@@ -499,34 +639,48 @@
         });
     }
 
-    if (copyIpBtn) {
-        copyIpBtn.addEventListener('click', () => {
-            copyToClipboard("89.248.236.141:27777", copyIpBtn, "IP скопирован");
+    // Копирование IP через кнопки
+    document.querySelectorAll('.copy-ip-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const ip = btn.dataset.ip;
+            copyToClipboard(ip, btn, "IP скопирован");
         });
-    }
+    });
 
-    if (copyQuickCmdBtn && quickCmdSpan) {
-        copyQuickCmdBtn.addEventListener('click', () => {
-            copyToClipboard(quickCmdSpan.innerText.trim(), copyQuickCmdBtn, "Команда готова");
+    // Копирование команд
+    document.querySelectorAll('.copy-cmd-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const cmd = btn.dataset.cmd;
+            copyToClipboard(cmd, btn, "Команда готова");
         });
-    }
+    });
 
-    if (quickCmdSpan) {
-        quickCmdSpan.style.cursor = "pointer";
-        quickCmdSpan.addEventListener('click', () => {
-            copyToClipboard(quickCmdSpan.innerText.trim(), copyQuickCmdBtn, "Команда скопирована");
+    // Клик по блоку с командой
+    document.querySelectorAll('.quick-cmd').forEach(cmdBlock => {
+        cmdBlock.style.cursor = "pointer";
+        cmdBlock.addEventListener('click', () => {
+            const cmd = cmdBlock.dataset.cmd;
+            const correspondingBtn = document.querySelector(`.copy-cmd-btn[data-cmd="${cmd}"]`);
+            if (correspondingBtn) {
+                copyToClipboard(cmd, correspondingBtn, "Команда скопирована");
+            }
         });
-    }
+    });
 
-    const ipDiv = document.querySelector('.ip-address');
-    if (ipDiv) {
-        ipDiv.style.cursor = "pointer";
-        ipDiv.addEventListener('click', () => {
-            copyToClipboard("89.248.236.141:27777", copyIpBtn, "IP скопирован");
+    // Клик по IP блоку
+    document.querySelectorAll('.ip-address').forEach(ipBlock => {
+        ipBlock.style.cursor = "pointer";
+        ipBlock.addEventListener('click', () => {
+            const ipText = ipBlock.innerText.trim();
+            const parentCard = ipBlock.closest('.card');
+            const copyBtn = parentCard.querySelector('.copy-ip-btn');
+            if (copyBtn) {
+                copyToClipboard(ipText, copyBtn, "IP скопирован");
+            }
         });
-    }
+    });
 
-    console.log("STAR RUST | Telegram на месте в карточках, донат внизу страницы!");
+    console.log("STAR RUST | Два сервера на сайте! У второго сервера убран телепорт.");
 </script>
 </body>
 </html>
